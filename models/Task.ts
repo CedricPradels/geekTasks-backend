@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const taskSchema = new mongoose.Schema({
-  title: { type: String, required: true, unique: true },
+  title: { type: String, required: true },
   contexts: [
     { type: mongoose.Schema.Types.ObjectId, Ref: "Context", required: true },
   ],

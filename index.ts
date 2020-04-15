@@ -1,15 +1,15 @@
-require("dotenv").config();
+import dotenv from "dotenv";
+dotenv.config();
 
-const express = require("express");
-import { Request, Response } from "express";
+import express, { Request, Response } from "express";
 const app = express();
-const cors = require("cors");
+import cors from "cors";
 app.use(cors());
-const formidableMiddleware = require("express-formidable");
+import formidableMiddleware from "express-formidable";
 app.use(formidableMiddleware());
 
-const mongoose = require("mongoose");
-mongoose.connect(process.env.MONGODB_URI, {
+import mongoose from "mongoose";
+mongoose.connect(`${process.env.MONGODB_URI}`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useFindAndModify: false,
@@ -17,6 +17,9 @@ mongoose.connect(process.env.MONGODB_URI, {
 
 import project from "./routes/project";
 app.use(project);
+
+import context from "./routes/context";
+app.use(context);
 
 app.all("*", (req: Request, res: Response) => {
   res.json({ message: "Page not found" });
