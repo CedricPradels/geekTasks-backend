@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const taskSchema = new mongoose.Schema({
   title: { type: String, required: true, uniq: true },
-  categories: [{ type: mongoose.Schema.Types.ObjectId, Ref: "Category" }],
+  contexts: [{ type: mongoose.Schema.Types.ObjectId, Ref: "Context" }],
   project: { type: mongoose.Schema.Types.ObjectId, Ref: "Category" },
 });
 
