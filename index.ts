@@ -21,6 +21,9 @@ app.use(project);
 import context from "./routes/context";
 app.use(context);
 
+import task from "./routes/task";
+app.use(task);
+
 app.all("*", (req: Request, res: Response) => {
   res.json({ message: "Page not found" });
 });
