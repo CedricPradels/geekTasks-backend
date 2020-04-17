@@ -5,7 +5,7 @@ import contextController from "../controllers/contextController";
 router
   .route("/context")
   .post(contextController.create)
-  .put(contextController.read);
+  .get(contextController.read);
 
 router
   .route("/context/:contextId")

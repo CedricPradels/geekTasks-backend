@@ -19,7 +19,6 @@ export default {
       if (!req.fields) throw "Missing body";
       const { contextsId = null, projectId = null } = req.fields;
       let tasksList;
-
       if (isNull(projectId)) {
         tasksList = await Task.find({
           contexts: { $in: contextsId },
