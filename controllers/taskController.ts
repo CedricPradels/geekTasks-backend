@@ -18,8 +18,11 @@ export default {
     try {
       if (!req.fields) throw "Missing body";
       const { contextsId = null, projectId = null } = req.fields;
+
       let tasksList;
-      if (isNull(projectId)) {
+      if (isNull(projectId) && isNull(contextsId)) {
+        tasksList = await Task.find();
+      } else if (isNull(projectId)) {
         tasksList = await Task.find({
           contexts: { $in: contextsId },
         });
@@ -39,7 +42,6 @@ export default {
       if (!req.fields) throw "Missing body.";
       const { title = null, contexts = null, project = null } = req.fields;
 
-      console.log(title, contexts, project);
       let updatedTask;
       if (!isNull(title))
         updatedTask = await Task.findByIdAndUpdate(taskId, { title });
