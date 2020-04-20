@@ -13,6 +13,7 @@ mongoose.connect(`${process.env.MONGODB_URI}`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useFindAndModify: false,
+  useCreateIndex: true,
 });
 
 import project from "./routes/project";
@@ -23,6 +24,9 @@ app.use(context);
 
 import task from "./routes/task";
 app.use(task);
+
+import user from "./routes/user";
+app.use(user);
 
 app.all("*", (req: Request, res: Response) => {
   res.json({ message: "Page not found" });
