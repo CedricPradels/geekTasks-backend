@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import Context from "../models/Context";
 import { isString, isNull } from "../helpers/predicates";
+import getBearer from "../helpers/getBearer";
+import findUserIdWithToken from "../helpers/findUserIdWithToken";
 
 export default {
   async create(req: Request, res: Response) {
@@ -8,9 +10,12 @@ export default {
       // ERRORS CHECK
       if (!req.fields) throw "Missing datas";
       let { title } = req.fields;
+      const token = getBearer(req);
       if (!isString(title) || title === "") throw "Wrong datas";
 
-      const newContext = await Context.create({ title });
+      const owner = await findUserIdWithToken(String(token));
+
+      const newContext = await Context.create({ title, owner });
       res.json({ success: true, context: newContext });
     } catch (error) {
       res.json({ success: false, error });
@@ -18,7 +23,9 @@ export default {
   },
   async read(req: Request, res: Response) {
     try {
-      const contextsList = await Context.find();
+      const token = getBearer(req);
+      const owner = await findUserIdWithToken(String(token));
+      const contextsList = await Context.find({ owner });
       res.json({ success: true, contexts: contextsList });
     } catch (error) {
       res.json({ success: false, error });
@@ -29,9 +36,14 @@ export default {
       const { contextId } = req.params;
       if (!req.fields) throw "Missing body";
       const { title: newTitle } = req.fields;
-      const updatedContext = await Context.findByIdAndUpdate(contextId, {
-        title: newTitle,
-      });
+      const token = getBearer(req);
+      const owner = await findUserIdWithToken(String(token));
+      const updatedContext = await Context.findOneAndUpdate(
+        { _id: contextId, owner },
+        {
+          title: newTitle,
+        }
+      );
       if (isNull(updatedContext)) throw "Context does not exist.";
       res.json({ success: true, message: "Context successfully updated." });
     } catch (error) {
@@ -41,7 +53,12 @@ export default {
   async delete(req: Request, res: Response) {
     try {
       const { contextId } = req.params;
-      const removedContext = await Context.findByIdAndRemove(contextId);
+      const token = getBearer(req);
+      const owner = await findUserIdWithToken(String(token));
+      const removedContext = await Context.findOneAndRemove({
+        _id: contextId,
+        owner,
+      });
       if (isNull(removedContext)) throw "Context does not exist.";
 
       res.json({ success: true, message: "Context successfully deleted." });

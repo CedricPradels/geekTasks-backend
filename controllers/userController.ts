@@ -30,7 +30,7 @@ export default {
 
       res.json({ username, token });
     } catch (error) {
-      res.json({ error });
+      res.status(500).json(error.message);
     }
   },
   async signin(req: Request, res: Response) {
